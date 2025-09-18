@@ -81,7 +81,7 @@ void BitHolder::initHolder(const ImVec2 &position, const ImVec4 &color, const ch
 {
 	setPosition(position.x, position.y);
 	setColor(color.x, color.y, color.z, color.w);
-	setSize(0, 0);
+	setSize(100, 100);
 	setScale(1.0f);
 	setLocalZOrder(0);
 	setHighlighted(false);
