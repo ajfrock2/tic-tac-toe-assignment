@@ -4,7 +4,7 @@
 // TicTacToe.cpp
 // -----------------------------------------------------------------------------
 const int AI_PLAYER   = 1;      // index of the AI player (O)
-const int HUMAN_PLAYER= 0;      // index of the human player (X)
+const int HUMAN_PLAYER= -1;      // index of the human player (X)
 
 TicTacToe::TicTacToe()
 {
@@ -190,24 +190,15 @@ void TicTacToe::setStateString(const std::string &s)
 //
 void TicTacToe::updateAI() 
 {
-    //Shitty ai code
-    std::string state = stateString();
-    for(int i=0; i<9; i++){
-        if(state[i] == '0'){
-            actionForEmptyHolder(&_grid[i/3][i%3]);
-            endTurn();
-            return;
-        }
-    }
-
-    /*IP Smart AI
+    
+    //Smart AI
     std::string state = stateString();
     int bestMove = -1000;
     int bestSquare =-1;
     for(int i=0; i<9; i++){
         if(state[i] == '0'){
             state[i] = '2';
-            int aiMove = -negamax(state,0,HUMAN_PLAYER);
+            int aiMove = -negamax(state, 0, HUMAN_PLAYER);
             state[i] ='0';
             if(aiMove > bestMove){
                 bestMove = aiMove;
@@ -218,9 +209,16 @@ void TicTacToe::updateAI()
 
     if(bestSquare != -1){
         actionForEmptyHolder(&_grid[bestSquare/3][bestSquare%3]);
-        endTurn();
+    }else{
+        //Shitty ai code as fial safe
+        std::string state = stateString();
+        for(int i=0; i<9; i++){
+            if(state[i] == '0'){
+                actionForEmptyHolder(&_grid[i/3][i%3]);
+            }
+        }
     }
-    */
+    endTurn();
 }
 
 bool isAIBoardFull(const std::string& state){
@@ -249,10 +247,12 @@ int checkForAIWinner(const std::string& state){
 int TicTacToe::negamax(std::string& state, int depth, int playerColor){
     int score = checkForAIWinner(state);
 
+    //If winner exists, return the scoring
     if(score){
         return -score;
     }
 
+    //If board is full and no winner, DRAW
     if (isAIBoardFull(state)) {
         return 0;
     }
@@ -267,4 +267,3 @@ int TicTacToe::negamax(std::string& state, int depth, int playerColor){
     }
     return bestVal;
 }
-
